@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">MovieApp</string>
+    <string name="welcome">Welcome to the Home Page!</string>
+</resources>
