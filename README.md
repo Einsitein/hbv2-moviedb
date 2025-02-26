@@ -2,11 +2,11 @@
 
 ## Todo
 
-- [ ] **Database**
+- [ ] **Database**  
   Get the database up and running
   Add Media to the database
 
-- [ ] ** Deploy Backend**
+- [ ] **Deploy Backend**  
   render?
 
 - [ ] **User Story 1**  
