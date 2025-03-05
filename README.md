@@ -21,9 +21,13 @@
   As a user, I want to search for a TV show by entering a search string,  
   so that I can view details about seasons, episodes, and ratings.
 
-- [ ] **New User Story**  
-  Leave a written review?  
-  Like reviews?  
-  TOP 10 movies/TvShows  
+- [ ] **User Story 5**  
+      As a user, I want to see a list of all the movies I have rated,  
+      so that I can review my past ratings.
+
+**Use Case ideas:**  
+  - Leave a written review?  
+  - Like reviews?  
+  - TOP 10 movies/TvShows  
         
   
