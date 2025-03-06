@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">MovieApp</string>
     <string name="welcome">Welcome to the Home Page!</string>
+    <string name="search_movies_tv_shows">Search Movies/TV Shows</string>
+    <string name="search_hint">Search for movies or TV shows</string>
+    <string name="show_movies">Show Movies</string>
+
 </resources>
