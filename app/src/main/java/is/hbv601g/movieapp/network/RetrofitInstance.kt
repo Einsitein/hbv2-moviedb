@@ -13,7 +13,11 @@ object RetrofitInstance {
             .build()
     }
 
-    val apiService: MovieApiService by lazy {
+    val movieApiService: MovieApiService by lazy {
         retrofit.create(MovieApiService::class.java)
+    }
+
+    val tvShowApiService: TvShowApiService by lazy {
+        retrofit.create(TvShowApiService::class.java)
     }
 }

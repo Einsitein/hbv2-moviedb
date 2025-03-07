@@ -4,43 +4,43 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import `is`.hbv601g.movieapp.adapter.MovieAdapter
+import `is`.hbv601g.movieapp.adapter.TvShowAdapter
 import `is`.hbv601g.movieapp.network.RetrofitInstance
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class MovieActivity : AppCompatActivity() {
+class TvShowActivity : AppCompatActivity() {
 
-    private lateinit var adapter: MovieAdapter
+    private lateinit var adapter: TvShowAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_movie)
+        setContentView(R.layout.activity_tv_show)
 
-        val recyclerView = findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.recyclerViewMovies)
+        val recyclerView = findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.recyclerViewTvShows)
         recyclerView.layoutManager = LinearLayoutManager(this)
-        adapter = MovieAdapter()
+        adapter = TvShowAdapter()
         recyclerView.adapter = adapter
 
-        fetchMovies()
+        fetchTvShows()
     }
 
-    private fun fetchMovies() {
+    private fun fetchTvShows() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val response = RetrofitInstance.movieApiService.getMovies()
+                val response = RetrofitInstance.tvShowApiService.getTvShows()
                 if (response.isSuccessful) {
-                    val movies = response.body() ?: emptyList()
+                    val tvShows = response.body() ?: emptyList()
                     withContext(Dispatchers.Main) {
-                        adapter.setMovies(movies)
+                        adapter.setTvShows(tvShows)
                     }
                 } else {
-                    Log.e("MovieActivity", "Error: ${response.code()}")
+                    Log.e("TvShowActivity", "Error: ${response.code()}")
                 }
             } catch (e: Exception) {
-                Log.e("MovieActivity", "Exception: ${e.message}")
+                Log.e("TvShowActivity", "Exception: ${e.message}")
             }
         }
     }

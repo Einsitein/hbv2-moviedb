@@ -9,20 +9,25 @@ class HomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
+        setupNavigationButtons()
+    }
 
-        // Temporary button for search Activity
-        // move to nav bar later..
+    private fun setupNavigationButtons() {
+        // Temporary buttons - move to nav bar or something later.
         val searchButton = findViewById<Button>(R.id.btnSearch)
-        searchButton.setOnClickListener {
-            // Navigate to SearchActivity
-            val intent = Intent(this, SearchActivity::class.java)
-            startActivity(intent)
+        val moviesButton = findViewById<Button>(R.id.btnMovies)
+        val tvShowsButton = findViewById<Button>(R.id.btnTvShows)
 
-            val moviesButton = findViewById<Button>(R.id.btnMovies)
-            moviesButton.setOnClickListener {
-                val intent = Intent(this, MovieActivity::class.java)
-                startActivity(intent)
-            }
+        searchButton.setOnClickListener {
+            startActivity(Intent(this, SearchActivity::class.java))
+        }
+
+        moviesButton.setOnClickListener {
+            startActivity(Intent(this, MovieActivity::class.java))
+        }
+
+        tvShowsButton.setOnClickListener {
+            startActivity(Intent(this, TvShowActivity::class.java))
         }
     }
 }
