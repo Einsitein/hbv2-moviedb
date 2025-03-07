@@ -13,6 +13,34 @@
         android:layout_height="wrap_content"
         android:queryHint="@string/search_hint" />
 
+    <!-- Toggle for search type -->
+    <RadioGroup
+        android:id="@+id/radioGroupSearchType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="8dp">
+
+        <RadioButton
+            android:id="@+id/radioAll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="All"
+            android:checked="true" />
+
+        <RadioButton
+            android:id="@+id/radioMovies"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Movies" />
+
+        <RadioButton
+            android:id="@+id/radioTvShows"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TV Shows" />
+    </RadioGroup>
+
     <!-- RecyclerView for displaying search results -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/searchResultsRecyclerView"
