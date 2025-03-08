@@ -35,17 +35,17 @@ class MyRatingsActivity : AppCompatActivity(){
      * gets reviews for the currently logged in user.
      */
     private fun fetchReviews() {
-        val query = "4"// ToDo: finna actual userId
+        val query:Long = 1// ToDo: finna actual userId
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val response = RetrofitInstance.reviewApiService.findByUserId(query)
-                if (response.isSuccessful) {
-                    val reviews = response.body() ?: emptyList()
+                val reviewResponse = RetrofitInstance.reviewApiService.findByUserId(query)
+                if (reviewResponse.isSuccessful) {
+                    val reviews = reviewResponse.body() ?: emptyList()
                     withContext(Dispatchers.Main) {
                         adapter.setReviews(reviews)
                     }
                 } else {
-                    Log.e("SearchActivity", "Reviews search failed with code: ${response.code()}")
+                    Log.e("SearchActivity", "Reviews search failed with code: ${reviewResponse.code()}")
                 }
             } catch (e: Exception) {
                 Log.e("SearchActivity", "Exception in findByUserId: ${e.message}")
