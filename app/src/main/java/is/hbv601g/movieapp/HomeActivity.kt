@@ -17,6 +17,7 @@ class HomeActivity : AppCompatActivity() {
         val searchButton = findViewById<Button>(R.id.btnSearch)
         val moviesButton = findViewById<Button>(R.id.btnMovies)
         val tvShowsButton = findViewById<Button>(R.id.btnTvShows)
+        val reviewButton = findViewById<Button>(R.id.btnReview)
 
         searchButton.setOnClickListener {
             startActivity(Intent(this, SearchActivity::class.java))
@@ -29,5 +30,10 @@ class HomeActivity : AppCompatActivity() {
         tvShowsButton.setOnClickListener {
             startActivity(Intent(this, TvShowActivity::class.java))
         }
+
+        reviewButton.setOnClickListener {
+            startActivity(Intent(this, MyRatingsActivity::class.java))
+        }
+
     }
 }
