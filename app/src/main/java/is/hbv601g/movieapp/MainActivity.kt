@@ -28,6 +28,19 @@ class MainActivity : AppCompatActivity() {
             val password = passwordEditText.text.toString()
             sendLoginRequest(email, password)
         }
+
+        // Mock til að opna movie
+        val btnOpenMovieDetails = findViewById<Button>(R.id.btnOpenMovieDetails)
+        btnOpenMovieDetails.setOnClickListener {
+            val movieId = 1  // Replace with actual movie ID
+            val userId = 1   // Replace with actual user ID
+
+            val intent = Intent(this, MovieDetailsActivity::class.java).apply {
+                putExtra("MOVIE_ID", movieId)
+                putExtra("USER_ID", userId)
+            }
+            startActivity(intent)
+        }
     }
 
     private fun sendLoginRequest(email: String, password: String) {
