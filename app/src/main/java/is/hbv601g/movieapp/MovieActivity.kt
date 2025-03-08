@@ -13,8 +13,13 @@ import kotlinx.coroutines.withContext
 
 class MovieActivity : AppCompatActivity() {
 
+    // Adapter to manage movie items in the RecyclerView.
     private lateinit var adapter: MovieAdapter
 
+    /**
+     * Called when the activity is created.
+     * Sets up the RecyclerView and starts fetching movies.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_movie)
@@ -24,9 +29,12 @@ class MovieActivity : AppCompatActivity() {
         adapter = MovieAdapter()
         recyclerView.adapter = adapter
 
-        fetchMovies()
+        fetchMovies() // Fetch movies from the backend.
     }
 
+    /**
+     * Fetches movies and Updates the adapter
+     */
     private fun fetchMovies() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
