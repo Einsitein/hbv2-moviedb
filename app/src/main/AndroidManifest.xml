@@ -18,12 +18,17 @@
             android:name=".TvShowActivity"
             android:exported="false" />
         <activity
+            android:name=".MyRatingsActivity"
+            android:exported="false" />
+        <activity
             android:name=".MovieActivity"
             android:exported="false" />
         <activity
             android:name=".SearchActivity"
             android:exported="false" />
         <activity android:name=".HomeActivity" />
+        <activity android:name=".RegisterActivity" />
+        <activity android:name=".LoginActivity" />
         <activity
             android:name=".MovieDetailsActivity"
             android:exported="true">

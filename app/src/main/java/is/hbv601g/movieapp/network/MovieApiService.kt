@@ -13,5 +13,5 @@ interface MovieApiService {
     suspend fun searchMovies(@Path("searchString") searchString: String): Response<List<MovieItem>>
 
     @GET("movies/{id}")
-    suspend fun getMovieById(@Path("id") id: Int): Response<MovieItem>
+    suspend fun getMovieById(@Path("id") id : Int) : Response<MovieItem>
 }

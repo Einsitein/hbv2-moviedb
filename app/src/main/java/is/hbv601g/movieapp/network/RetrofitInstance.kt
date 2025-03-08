@@ -1,9 +1,7 @@
 package `is`.hbv601g.movieapp.network
 
-import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.util.concurrent.TimeUnit
 
 /**
  * Singleton object to create and manage the Retrofit instance.
@@ -35,6 +33,9 @@ object RetrofitInstance {
         retrofit.create(TvShowApiService::class.java)
     }
 
+    /**
+     * Provides the service for review API calls.
+     */
     val reviewApiService: ReviewApiService by lazy {
         retrofit.create(ReviewApiService::class.java)
     }

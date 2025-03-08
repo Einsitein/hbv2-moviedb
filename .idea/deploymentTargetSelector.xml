@@ -5,6 +5,7 @@
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
+<<<<<<< HEAD
       <SelectionState runConfigName="MovieDetailsActivity">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
@@ -18,6 +19,12 @@
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
       <SelectionState runConfigName="MovieDetailsActivity (1)">
+=======
+      <SelectionState runConfigName="MyRatingsActivity">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="MyRatingsActivity (1)">
+>>>>>>> 57aa18939d8303c65b817b75a31ac3dd5ff4e99b
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>

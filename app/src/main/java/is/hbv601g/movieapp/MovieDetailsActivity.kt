@@ -70,6 +70,7 @@ class MovieDetailsActivity : AppCompatActivity() {
 
                 if (userRating.isNotEmpty()) {
                     val review = ReviewItem(
+                        id = userId.toString() + "-" + movieId.toString(),
                         userId = userId.toLong(),  // Replace with actual user ID
                         movieId = movieId.toLong(), // Pass the correct movie ID from your details
                         rating = userRating.toDouble(),

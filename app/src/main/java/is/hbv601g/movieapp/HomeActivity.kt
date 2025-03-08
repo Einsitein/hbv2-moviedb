@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 
+
 class HomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -17,6 +18,7 @@ class HomeActivity : AppCompatActivity() {
         val searchButton = findViewById<Button>(R.id.btnSearch)
         val moviesButton = findViewById<Button>(R.id.btnMovies)
         val tvShowsButton = findViewById<Button>(R.id.btnTvShows)
+        val reviewButton = findViewById<Button>(R.id.btnReview)
 
         searchButton.setOnClickListener {
             startActivity(Intent(this, SearchActivity::class.java))
@@ -29,5 +31,21 @@ class HomeActivity : AppCompatActivity() {
         tvShowsButton.setOnClickListener {
             startActivity(Intent(this, TvShowActivity::class.java))
         }
+
+        reviewButton.setOnClickListener {
+            startActivity(Intent(this, MyRatingsActivity::class.java))
+        }
+
+
+        val btnOpenMovieDetails = findViewById<Button>(R.id.btnOpenMovieDetails)
+        btnOpenMovieDetails.setOnClickListener {
+            val intent = Intent(this, MovieDetailsActivity::class.java).apply {
+                putExtra("MOVIE_ID", 1)  // Replace 1 with the actual movie ID
+                putExtra("USER_ID", 1)    // Replace 1 with the actual user ID
+            }
+            startActivity(intent)
+        }
+
+
     }
 }
