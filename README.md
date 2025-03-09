@@ -1,4 +1,4 @@
-Bakendi - https://hugbunadarverkefni1-moviedb.onrender.com/ 
+Backend - https://hugbunadarverkefni1-moviedb.onrender.com/ 
 
 # Assignment 3
 
@@ -9,7 +9,7 @@ Bakendi - https://hugbunadarverkefni1-moviedb.onrender.com/
 
 - [X] **Deploy Backend**  
 
-- [ ] **User Story 1**  
+- [X] **User Story 1**  
   As an unregistered user, I want to create an account using my email, name, and password,  
   so that I can access the system and use its features.
 
