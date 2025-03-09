@@ -12,9 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import `is`.hbv601g.movieapp.model.ReviewItem
 import `is`.hbv601g.movieapp.network.RetrofitInstance
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlin.coroutines.cancellation.CancellationException
