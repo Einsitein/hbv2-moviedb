@@ -1,5 +1,6 @@
 package `is`.hbv601g.movieapp
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
@@ -11,7 +12,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import `is`.hbv601g.movieapp.model.ReviewItem
+import `is`.hbv601g.movieapp.model.UserItem
 import `is`.hbv601g.movieapp.network.RetrofitInstance
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -20,6 +23,17 @@ import kotlin.coroutines.cancellation.CancellationException
 
 class MovieDetailsActivity : AppCompatActivity() {
 
+    private suspend fun getUserId(context: Context): Long{
+        val token = DBHelper(context).getLatestToken()
+        token?.let {
+            val response = RetrofitInstance.userApiService.getMe(token)
+            val user = response.body()
+            user?.let {
+                return user.id
+            }
+        }
+        return -1
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_movie_detail)
@@ -33,7 +47,18 @@ class MovieDetailsActivity : AppCompatActivity() {
 
         // Retrieve the passed movie ID
         val movieId = intent.getIntExtra("MOVIE_ID", -1)
-        val userId = intent.getIntExtra("USER_ID", -1)
+        //val userId = intent.getIntExtra("USER_ID", -1)
+
+        var userId : Long = -1
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                userId = getUserId(applicationContext)
+
+            } catch (e: Exception) {
+                Log.e("SearchActivity", "Exception in findByUserId: ${e.message}")
+            }
+        }
+
 
 
         if (movieId != -1) {
@@ -80,6 +105,7 @@ class MovieDetailsActivity : AppCompatActivity() {
                     movieReview = ""
                 )
 
+                Log.d("DEBUGG!!", review.toString())
                 lifecycleScope.launch {
                     Log.d("MovieApp", userRating.toString())
                     try {
