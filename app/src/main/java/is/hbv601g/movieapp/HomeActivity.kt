@@ -41,7 +41,6 @@ class HomeActivity : AppCompatActivity() {
         btnOpenMovieDetails.setOnClickListener {
             val intent = Intent(this, MovieDetailsActivity::class.java).apply {
                 putExtra("MOVIE_ID", 1)  // Replace 1 with the actual movie ID
-                putExtra("USER_ID", 1)    // Replace 1 with the actual user ID
             }
             startActivity(intent)
         }
