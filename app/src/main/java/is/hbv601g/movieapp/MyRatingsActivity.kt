@@ -51,7 +51,6 @@ class MyRatingsActivity : AppCompatActivity(){
         }
     }
 
-
     /**
      * Fetches User data from token of the currently logged in user
      */

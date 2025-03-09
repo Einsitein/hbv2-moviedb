@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import `is`.hbv601g.movieapp.R
+import `is`.hbv601g.movieapp.model.MovieItem
 import `is`.hbv601g.movieapp.model.ReviewItem
 import `is`.hbv601g.movieapp.network.RetrofitInstance
 import kotlinx.coroutines.CoroutineScope
@@ -44,24 +45,27 @@ class ReviewAdapter : RecyclerView.Adapter<ReviewAdapter.ReviewViewHolder>() {
 
         fun bind(review: ReviewItem) {
 
+
+            fetchMovie(review.movieId.toInt(), mediaTitle)
+            rating.text = review.rating.toString()
+            reviewTextView.text = review.movieReview
+        }
+        private fun fetchMovie(movieId: Int, mediaTitle: TextView){
             CoroutineScope(Dispatchers.IO).launch {
                 try {
-                    val response = RetrofitInstance.movieApiService.getMovieById(review.movieId.toInt())
+                    val response = RetrofitInstance.movieApiService.getMovieById(movieId)
+                    val movie = response.body()
                     if (response.isSuccessful) {
-                        val movie = response.body()
-                        if (movie != null) {
+                        movie?.let {
                             mediaTitle.text = movie.name
                         }
                     } else {
-                        Log.e("MovieActivity", "Error: ${response.code()}")
+                        Log.e("ReviewAdapter", "Error: ${response.code()}")
                     }
                 } catch (e: Exception) {
-                    Log.e("MovieActivity", "Exception: ${e.message}")
+                    Log.e("ReviewAdapter", "Exception: ${e.message}")
                 }
             }
-
-            rating.text = review.rating.toString()
-            reviewTextView.text = review.movieReview
         }
     }
 }
