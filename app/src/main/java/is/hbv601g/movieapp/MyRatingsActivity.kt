@@ -12,6 +12,7 @@ import `is`.hbv601g.movieapp.adapter.ReviewAdapter
 import `is`.hbv601g.movieapp.network.RetrofitInstance
 
 import `is`.hbv601g.movieapp.DBHelper
+import `is`.hbv601g.movieapp.model.UserItem
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -43,6 +44,7 @@ class MyRatingsActivity : AppCompatActivity(){
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val user = fetchUserData(token)
+
                 sendReviewrequest(user)
             } catch (e: Exception) {
                 Log.e("SearchActivity", "Exception in findByUserId: ${e.message}")
@@ -66,7 +68,7 @@ class MyRatingsActivity : AppCompatActivity(){
      */
     private suspend fun sendReviewrequest(user: UserItem?){
         user?.let {
-            val reviewResponse = RetrofitInstance.reviewApiService.findByUserId(user.id)
+            val reviewResponse = RetrofitInstance.reviewApiService.findByUserId(user.id)//ToDo finna út afhverju ég fæ  [] sem body
             if (reviewResponse.isSuccessful) {
                 val reviews = reviewResponse.body() ?: emptyList()
                 withContext(Dispatchers.Main) {
