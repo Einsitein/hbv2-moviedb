@@ -12,7 +12,6 @@ import `is`.hbv601g.movieapp.adapter.ReviewAdapter
 import `is`.hbv601g.movieapp.network.RetrofitInstance
 
 import `is`.hbv601g.movieapp.DBHelper
-import `is`.hbv601g.movieapp.model.UserItem
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

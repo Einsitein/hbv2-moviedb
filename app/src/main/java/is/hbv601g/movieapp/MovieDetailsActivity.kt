@@ -12,10 +12,9 @@ import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import `is`.hbv601g.movieapp.model.ReviewItem
 import `is`.hbv601g.movieapp.network.RetrofitInstance
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlin.coroutines.cancellation.CancellationException
 
 
@@ -66,39 +65,60 @@ class MovieDetailsActivity : AppCompatActivity() {
             }
 
             submitRatingButton.setOnClickListener {
-                val userRating = userRatingInput.text.toString()
+                val userRating = userRatingInput.text.toString().toDoubleOrNull()
 
-                if (userRating.isNotEmpty()) {
-                    val review = ReviewItem(
-                        id = userId.toString() + "-" + movieId.toString(),
-                        userId = userId.toLong(),  // Replace with actual user ID
-                        movieId = movieId.toLong(), // Pass the correct movie ID from your details
-                        rating = userRating.toDouble(),
-                        movieReview = "" // Assuming this is required
-                    )
+                if (userRating == null) {
+                    Toast.makeText(this, "Please enter a valid rating!", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
 
-                    CoroutineScope(Dispatchers.IO).launch {
-                        try {
-                            val call = async { RetrofitInstance.reviewApiService.submitReview(review) }
-                            val response = call.await()
+                val review = ReviewItem(
+                    id = "${userId}-$movieId",
+                    userId = userId.toLong(),
+                    movieId = movieId.toLong(),
+                    rating = userRating,
+                    movieReview = ""
+                )
 
+                lifecycleScope.launch {
+                    Log.d("MovieApp", userRating.toString())
+                    try {
+                        val response = withContext(Dispatchers.IO) {
+                            RetrofitInstance.reviewApiService.submitReview(review)
+                        }
+
+                        withContext(Dispatchers.Main) {
                             if (response.isSuccessful) {
-                                Toast.makeText(
-                                    this@MovieDetailsActivity,
-                                    "You rated ${movieName.text} as $userRating",
-                                    Toast.LENGTH_SHORT
-                                ).show()
+                                Toast.makeText(this@MovieDetailsActivity, "Your rating: $userRating", Toast.LENGTH_SHORT).show()
+                                val updatedRatingResponse = withContext(Dispatchers.IO) {
+                                    RetrofitInstance.reviewApiService.getMovieRatingById(movieId)
+                                }
+
+                                // Update the UI with the new rating
+                                withContext(Dispatchers.Main) {
+                                    if (updatedRatingResponse.isSuccessful) {
+                                        val newAverageRating = updatedRatingResponse.body()
+                                        movieRating.text = "Rating: ${newAverageRating?.toString() ?: "N/A"}"
+                                    } else {
+                                        Toast.makeText(
+                                            this@MovieDetailsActivity,
+                                            "Failed to fetch updated rating!",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
+                                }
                             } else {
                                 Toast.makeText(this@MovieDetailsActivity, "Failed to submit rating!", Toast.LENGTH_SHORT).show()
                             }
-                        } catch (e: Exception) {
+                        }
+                    } catch (e: Exception) {
+                        withContext(Dispatchers.Main) {
                             Toast.makeText(this@MovieDetailsActivity, "Network error: ${e.message}", Toast.LENGTH_SHORT).show()
                         }
                     }
-                } else {
-                    Toast.makeText(this@MovieDetailsActivity, "Please enter a rating!", Toast.LENGTH_SHORT).show()
                 }
             }
+
 
         }
     }
