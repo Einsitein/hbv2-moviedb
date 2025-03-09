@@ -86,19 +86,19 @@ class LoginActivity : AppCompatActivity() {
         loginButton.setOnClickListener {
             val email = emailEditText.text.toString()
             val password = passwordEditText.text.toString()
-            sendLoginRequest(email, password)
+            sendLoginRequest(email, password, applicationContext)
         }
 
         switchButton.setOnClickListener {
             runOnUiThread {
-                val intent = Intent(this@LoginActivity, RegisterActivity::class.java)
+                val intent = Intent(applicationContext, RegisterActivity::class.java)
                 startActivity(intent)
                 finish()
             }
         }
     }
 
-    private fun sendLoginRequest(email: String, password: String) {
+    private fun sendLoginRequest(email: String, password: String, context: Context) {
 
         val jsonBody = """
         {
@@ -128,17 +128,17 @@ class LoginActivity : AppCompatActivity() {
                     if (responseString.startsWith("Invalid")) {
                         // Invalid credentials – notify the user.
                         runOnUiThread {
-                            Toast.makeText(this@LoginActivity, "Invalid credentials!", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, "Invalid credentials!", Toast.LENGTH_SHORT).show()
                         }
                         return
                     } else {
                         // Save token to SQLite
-                        val dbHelper = DBHelper(this@LoginActivity)
+                        val dbHelper = DBHelper(context)
                         dbHelper.insertToken(responseString)
 
                         val tokenFromDb = dbHelper.getLatestToken()
                         runOnUiThread {
-                            Toast.makeText(this@LoginActivity, "Token: $tokenFromDb", Toast.LENGTH_LONG).show()
+                            Toast.makeText(context, "Token: $tokenFromDb", Toast.LENGTH_LONG).show()
                         }
 
                     }
@@ -146,7 +146,7 @@ class LoginActivity : AppCompatActivity() {
                     Log.e("Login", "Login failed with code: ${response.code}")
                 }
                 runOnUiThread {
-                    val intent = Intent(this@LoginActivity, HomeActivity::class.java)
+                    val intent = Intent(context, HomeActivity::class.java)
                     startActivity(intent)
                     finish()
                 }

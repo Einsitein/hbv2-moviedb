@@ -6,6 +6,6 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 
 interface ReviewApiService {
-    @GET("/review/findByUserId/{userId}")
-    suspend fun findByUserId(@Path("userId") userId: Long): Response<List<ReviewItem>>
+    @GET("user/users/{user_id}/movies/ratings")
+    suspend fun findByUserId(@Path("user_id") userId: Long): Response<List<ReviewItem>>
 }
