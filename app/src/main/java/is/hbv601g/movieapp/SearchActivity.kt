@@ -1,5 +1,6 @@
 package `is`.hbv601g.movieapp
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.RadioGroup
@@ -7,6 +8,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import `is`.hbv601g.movieapp.adapter.SearchResultsAdapter
+import `is`.hbv601g.movieapp.model.MovieItem
+import `is`.hbv601g.movieapp.model.TvShowItem
 import `is`.hbv601g.movieapp.network.RetrofitInstance
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -36,7 +39,22 @@ class SearchActivity : AppCompatActivity() {
         searchView = findViewById(R.id.searchView)
         recyclerView = findViewById(R.id.searchResultsRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
-        adapter = SearchResultsAdapter()
+
+        adapter = SearchResultsAdapter().apply {
+            onItemClick = { selectedItem ->
+                when (selectedItem) {
+                    is MovieItem -> {
+                        //start MovieDetailsActivity with the movie ID.
+                        val intent = Intent(this@SearchActivity, MovieDetailsActivity::class.java)
+                        intent.putExtra("MOVIE_ID", selectedItem.id)
+                        startActivity(intent)
+                    }
+                    is TvShowItem -> {
+                        // Do nothing for TV shows, no TV show detail activity yet.
+                    }
+                }
+            }
+        }
         recyclerView.adapter = adapter
 
         radioGroup = findViewById(R.id.radioGroupSearchType)
