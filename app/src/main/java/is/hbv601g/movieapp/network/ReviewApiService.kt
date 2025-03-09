@@ -15,6 +15,6 @@ interface ReviewApiService {
     suspend fun getMovieRatingById(@Path("movieId") movieId: Int): Response<Double>
 
     @POST("review/createReview")
-    fun submitReview(@Body review: ReviewItem): Response<ReviewItem>
+    suspend fun submitReview(@Body review: ReviewItem): Response<ReviewItem>
 
 }
