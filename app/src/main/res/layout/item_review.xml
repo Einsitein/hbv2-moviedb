@@ -18,7 +18,7 @@
 
             <TextView
                 android:id="@+id/mediaTitle"
-                android:layout_width="165dp"
+                android:layout_width="342dp"
                 android:layout_height="wrap_content"
                 android:text="media_title" />
 

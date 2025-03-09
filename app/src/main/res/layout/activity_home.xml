@@ -14,24 +14,21 @@
 
     <Button
         android:id="@+id/btnSearch"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/search_movies_tv_shows"
-        android:layout_marginTop="24dp"/>
+        android:text="@string/search_movies_tv_shows" />
 
     <Button
         android:id="@+id/btnMovies"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/show_movies"
-        android:layout_marginTop="24dp"/>
+        android:text="@string/show_movies" />
 
     <Button
         android:id="@+id/btnTvShows"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/show_tv_shows"
-        android:layout_marginTop="16dp"/>
+        android:text="@string/show_tv_shows" />
 
     <Button
         android:id="@+id/btnReview"
@@ -39,12 +36,4 @@
         android:layout_height="wrap_content"
         android:text="@string/show_my_reviews" />
 
-    <Button
-        android:id="@+id/btnOpenMovieDetails"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Open Movie Details"
-        android:layout_marginTop="16dp"
-        android:layout_gravity="center"
-        android:onClick="openMovieDetails" />
 </LinearLayout>

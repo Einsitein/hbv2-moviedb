@@ -36,15 +36,5 @@ class HomeActivity : AppCompatActivity() {
             startActivity(Intent(this, MyRatingsActivity::class.java))
         }
 
-
-        val btnOpenMovieDetails = findViewById<Button>(R.id.btnOpenMovieDetails)
-        btnOpenMovieDetails.setOnClickListener {
-            val intent = Intent(this, MovieDetailsActivity::class.java).apply {
-                putExtra("MOVIE_ID", 1)  // Replace 1 with the actual movie ID
-            }
-            startActivity(intent)
-        }
-
-
     }
 }
