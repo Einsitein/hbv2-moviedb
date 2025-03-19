@@ -16,6 +16,8 @@ class MovieAdapter : RecyclerView.Adapter<MovieAdapter.MovieViewHolder>() {
     // List of movies to show.
     private var movies: List<MovieItem> = emptyList()
 
+    var onItemClick: ((MovieItem) -> Unit)? = null
+
     /**
      * Update the movies list.
      */
@@ -36,7 +38,12 @@ class MovieAdapter : RecyclerView.Adapter<MovieAdapter.MovieViewHolder>() {
      * Bind movie data to the ViewHolder.
      */
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
-        holder.bind(movies[position])
+        val movie = movies[position]
+        holder.bind(movie)
+        // When the item is clicked, trigger the onItemClick callback.
+        holder.itemView.setOnClickListener {
+            onItemClick?.invoke(movie)
+        }
     }
 
     /**

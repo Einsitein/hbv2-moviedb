@@ -16,6 +16,9 @@ class SearchResultsAdapter : RecyclerView.Adapter<SearchResultsAdapter.SearchRes
 
     private var items: List<Any> = emptyList()
 
+    // Click listener for when an item is clicked.
+    var onItemClick: ((Any) -> Unit)? = null
+
     /**
      * Updates the list of items and refreshes the view.
      */
@@ -37,7 +40,8 @@ class SearchResultsAdapter : RecyclerView.Adapter<SearchResultsAdapter.SearchRes
      * Binds a MovieItem or TvShowItem to the ViewHolder.
      */
     override fun onBindViewHolder(holder: SearchResultsViewHolder, position: Int) {
-        when (val item = items[position]) {
+        val item = items[position]
+        when (item) {
             is MovieItem -> {
                 holder.title.text = item.name
                 holder.subtitle.text = holder.itemView.context.getString(R.string.movie_subtitle, item.year)
@@ -53,6 +57,10 @@ class SearchResultsAdapter : RecyclerView.Adapter<SearchResultsAdapter.SearchRes
                 holder.title.text = holder.itemView.context.getString(R.string.unknown)
                 holder.subtitle.text = ""
             }
+        }
+        // Set the click listener for this item.
+        holder.itemView.setOnClickListener {
+            onItemClick?.invoke(item)
         }
     }
 

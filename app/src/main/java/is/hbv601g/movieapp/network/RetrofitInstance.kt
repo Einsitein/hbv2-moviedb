@@ -32,4 +32,18 @@ object RetrofitInstance {
     val tvShowApiService: TvShowApiService by lazy {
         retrofit.create(TvShowApiService::class.java)
     }
+
+    /**
+     * Provides the service for review API calls.
+     */
+    val reviewApiService: ReviewApiService by lazy {
+        retrofit.create(ReviewApiService::class.java)
+    }
+
+    /**
+     * Provides the service for review API calls.
+     */
+    val userApiService: UserApiService by lazy {
+        retrofit.create(UserApiService::class.java)
+    }
 }
