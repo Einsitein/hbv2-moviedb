@@ -5,35 +5,47 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="?android:windowBackground">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/welcome" />
+        android:text="@string/welcome"
+        android:textColor="?android:textColorPrimary"/>
 
     <Button
         android:id="@+id/btnSearch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/search_movies_tv_shows" />
+        android:text="@string/search_movies_tv_shows"
+        android:textColor="?android:textColorPrimary"/>
 
     <Button
         android:id="@+id/btnMovies"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/show_movies" />
+        android:text="@string/show_movies"
+        android:textColor="?android:textColorPrimary"/>
 
     <Button
         android:id="@+id/btnTvShows"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/show_tv_shows" />
+        android:text="@string/show_tv_shows"
+        android:textColor="?android:textColorPrimary"/>
 
     <Button
         android:id="@+id/btnReview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/show_my_reviews" />
+        android:text="@string/show_my_reviews"
+        android:textColor="?android:textColorPrimary"/>
 
+    <Button
+        android:id="@+id/btnToggleTheme"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/toggle_dark_mode"
+        android:textColor="?android:textColorPrimary"/>
 </LinearLayout>
