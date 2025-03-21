@@ -9,4 +9,7 @@ import retrofit2.http.Header
 interface UserApiService {
     @GET("/user/me")
     suspend fun getMe(@Header("Authorization") accessToken: String): Response<UserItem>
+
+    @GET("/user/me/movies/ratings/avg")
+    suspend fun getAverageRatingOfMe(@Header("Authorization") accessToken: String): Response<Double>
 }
