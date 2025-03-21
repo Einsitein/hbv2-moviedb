@@ -68,7 +68,7 @@ class MyRatingsActivity : AppCompatActivity(){
      */
     private suspend fun sendReviewrequest(user: UserItem?){
         user?.let {
-            val reviewResponse = RetrofitInstance.reviewApiService.findByUserId(user.id)//ToDo finna út afhverju ég fæ  [] sem body
+            val reviewResponse = RetrofitInstance.reviewApiService.findByUserId(user.id)
             if (reviewResponse.isSuccessful) {
                 val reviews = reviewResponse.body() ?: emptyList()
                 withContext(Dispatchers.Main) {
