@@ -4,7 +4,7 @@ Backend - https://hugbunadarverkefni1-moviedb.onrender.com/
 
 ## Todo
 
-- [] **User Story 7**  
+- [X] **User Story 7**  
   As a user, I want to see my average rating for all movies I have rated, so that I can understand my overall rating trends.
 
 - [] **User Story 8**  

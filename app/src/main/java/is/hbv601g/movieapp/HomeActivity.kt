@@ -68,7 +68,7 @@ class HomeActivity : AppCompatActivity() {
     private suspend fun setupAverageRating(){
         val averageRatingTextView = findViewById<TextView>(R.id.textViewAverageRating)
         val rating = getAverageRating(applicationContext)
-        val averageRatingText = "Average rating: $rating"
+        val averageRatingText = "My Average Rating Across All Movies: $rating"
         averageRatingTextView.text = averageRatingText
     }
 
