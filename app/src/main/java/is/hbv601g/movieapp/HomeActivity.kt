@@ -7,6 +7,7 @@ import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import `is`.hbv601g.movieapp.network.RetrofitInstance
@@ -17,12 +18,12 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-
 class HomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
         setupNavigationButtons()
+        setupThemeToggleButton()
 
         MainScope().launch{
             withContext(Dispatchers.Main){ setupAverageRating() }
@@ -39,19 +40,29 @@ class HomeActivity : AppCompatActivity() {
         searchButton.setOnClickListener {
             startActivity(Intent(this, SearchActivity::class.java))
         }
-
         moviesButton.setOnClickListener {
             startActivity(Intent(this, MovieActivity::class.java))
         }
-
         tvShowsButton.setOnClickListener {
             startActivity(Intent(this, TvShowActivity::class.java))
         }
-
         reviewButton.setOnClickListener {
             startActivity(Intent(this, MyRatingsActivity::class.java))
         }
+    }
 
+    private fun setupThemeToggleButton() {
+        val toggleThemeButton = findViewById<Button>(R.id.btnToggleTheme)
+        toggleThemeButton.setOnClickListener {
+            // Check current mode and toggle
+            val currentMode = AppCompatDelegate.getDefaultNightMode()
+            val newMode = if (currentMode == AppCompatDelegate.MODE_NIGHT_YES) {
+                AppCompatDelegate.MODE_NIGHT_NO
+            } else {
+                AppCompatDelegate.MODE_NIGHT_YES
+            }
+            AppCompatDelegate.setDefaultNightMode(newMode)
+        }
     }
 
     private suspend fun setupAverageRating(){
