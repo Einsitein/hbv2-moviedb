@@ -6,14 +6,10 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import `is`.hbv601g.movieapp.adapter.MovieAdapter
 import `is`.hbv601g.movieapp.adapter.ReviewAdapter
-
-import `is`.hbv601g.movieapp.network.RetrofitInstance
-
-import `is`.hbv601g.movieapp.DBHelper
+import `is`.hbv601g.movieapp.database.AppDatabaseHelper
 import `is`.hbv601g.movieapp.model.UserItem
-
+import `is`.hbv601g.movieapp.network.RetrofitInstance
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -40,7 +36,7 @@ class MyRatingsActivity : AppCompatActivity(){
      * fetches reviews for the currently logged in user.
      */
     private fun fetchReviews(context: Context) {
-        val token = DBHelper(context).getLatestToken()
+        val token = AppDatabaseHelper(context).getLatestToken()
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val user = fetchUserData(token)

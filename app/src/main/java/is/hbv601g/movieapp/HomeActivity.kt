@@ -2,31 +2,116 @@ package `is`.hbv601g.movieapp
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import androidx.core.content.FileProvider
+import androidx.lifecycle.lifecycleScope
+import `is`.hbv601g.movieapp.database.AppDatabaseHelper
 import `is`.hbv601g.movieapp.network.RetrofitInstance
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.File
+
 
 class HomeActivity : AppCompatActivity() {
+
+    private lateinit var profileImageView: ImageView
+    private lateinit var pickImageLauncher: ActivityResultLauncher<String>
+    private lateinit var takePhotoLauncher: ActivityResultLauncher<Uri>
+    private var photoUri: Uri? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
         setupNavigationButtons()
         setupThemeToggleButton()
 
-        MainScope().launch{
-            withContext(Dispatchers.Main){ setupAverageRating() }
+        lifecycleScope.launch {
+            setupAverageRating()
+        }
+
+        // Setup profile picture
+        profileImageView = findViewById(R.id.profileImageView)
+        loadProfilePicture()
+
+        // Launcher for gallery selection.
+        pickImageLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+            uri?.let {
+                updateProfilePicture(it)
+            }
+        }
+
+        // Launcher for taking a new photo.
+        takePhotoLauncher = registerForActivityResult(ActivityResultContracts.TakePicture()) { success: Boolean ->
+            if (success && photoUri != null) {
+                updateProfilePicture(photoUri!!)
+            } else {
+                Toast.makeText(this, "Failed to take photo", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        // When profile image is clicked, show dialog to choose image source.
+        profileImageView.setOnClickListener {
+            showImagePickerDialog()
+        }
+    }
+
+    /**
+     * Shows a dialog with options to pick an image from the gallery or take a new photo.
+     */
+    private fun showImagePickerDialog() {
+        val options = arrayOf("Choose from Gallery", "Take Photo")
+        AlertDialog.Builder(this)
+            .setTitle("Select Profile Picture")
+            .setItems(options) { _, which ->
+                when (which) {
+                    0 -> pickImageLauncher.launch("image/*")
+                    1 -> {
+                        photoUri = createImageUri()
+                        takePhotoLauncher.launch(photoUri)
+                    }
+                }
+            }
+            .show()
+    }
+
+    /**
+     * Creates a temporary URI for saving a new photo.
+     */
+    private fun createImageUri(): Uri {
+        val imageFile = File.createTempFile("profile_", ".jpg", getExternalFilesDir(null))
+        return FileProvider.getUriForFile(this, "${applicationContext.packageName}.provider", imageFile)
+    }
+
+    /**
+     * Updates the profile picture ImageView and stores the URI in the database.
+     */
+    private fun updateProfilePicture(uri: Uri) {
+        profileImageView.setImageURI(uri)
+        val dbHelper = AppDatabaseHelper(this)
+        dbHelper.insertProfilePicture(uri.toString())
+        Toast.makeText(this, "Profile picture updated", Toast.LENGTH_SHORT).show()
+    }
+
+    /**
+     * Loads the profile picture from the database, if available.
+     */
+    private fun loadProfilePicture() {
+        val dbHelper = AppDatabaseHelper(this)
+        val uriString = dbHelper.getProfilePicture()
+        uriString?.let {
+            profileImageView.setImageURI(Uri.parse(it))
         }
     }
 
@@ -76,7 +161,7 @@ class HomeActivity : AppCompatActivity() {
     * Helper function
     * */
     private suspend fun getAverageRating(context: Context): Double{
-        val token = DBHelper(context).getLatestToken()
+        val token = AppDatabaseHelper(context).getLatestToken()
         var rating = 0.0
         token?.let {
             val fetchedRating = RetrofitInstance.userApiService.getAverageRatingOfMe(token).body()
