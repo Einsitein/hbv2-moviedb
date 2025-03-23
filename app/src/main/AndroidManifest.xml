@@ -38,6 +38,9 @@
         <activity android:name=".HomeActivity" />
         <activity android:name=".RegisterActivity" />
         <activity android:name=".LoginActivity" />
+        <activity android:name=".TvShowDetailsActivity" />
+        <activity android:name=".TvShowEpisodesActivity" />
+        <activity android:name=".EpisodeDetailsActivity" />
         <activity
             android:name=".MovieDetailsActivity"
             android:exported="true">

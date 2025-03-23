@@ -1,5 +1,6 @@
 package `is`.hbv601g.movieapp
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -11,6 +12,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+/**
+ * Activity to display a list of TV shows.
+ * Tapping on a TV show launches TvShowDetailsActivity.
+ */
 class TvShowActivity : AppCompatActivity() {
 
     private lateinit var adapter: TvShowAdapter
@@ -21,12 +26,23 @@ class TvShowActivity : AppCompatActivity() {
 
         val recyclerView = findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.recyclerViewTvShows)
         recyclerView.layoutManager = LinearLayoutManager(this)
-        adapter = TvShowAdapter()
+
+        adapter = TvShowAdapter().apply {
+            onItemClick = { tvShow ->
+                // Launch TvShowDetailsActivity when a TV show is clicked.
+                val intent = Intent(this@TvShowActivity, TvShowDetailsActivity::class.java)
+                intent.putExtra("TVSHOW_ID", tvShow.id)
+                startActivity(intent)
+            }
+        }
         recyclerView.adapter = adapter
 
         fetchTvShows()
     }
 
+    /**
+     * Fetches TV shows from the backend and updates the adapter.
+     */
     private fun fetchTvShows() {
         CoroutineScope(Dispatchers.IO).launch {
             try {

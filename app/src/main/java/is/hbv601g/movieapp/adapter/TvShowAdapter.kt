@@ -15,6 +15,9 @@ class TvShowAdapter : RecyclerView.Adapter<TvShowAdapter.TvShowViewHolder>() {
 
     private var tvShows: List<TvShowItem> = emptyList()
 
+    // Callback that gets invoked when a TV show is clicked.
+    var onItemClick: ((TvShowItem) -> Unit)? = null
+
     /**
      * Updates the list of TV shows.
      */
@@ -23,35 +26,34 @@ class TvShowAdapter : RecyclerView.Adapter<TvShowAdapter.TvShowViewHolder>() {
         notifyDataSetChanged()
     }
 
-    /**
-     * Creates a new ViewHolder for a TV show.
-     */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TvShowViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_tv_show, parent, false)
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.item_tv_show, parent, false)
         return TvShowViewHolder(view)
     }
 
-    /**
-     * Binds a TV show to the ViewHolder.
-     */
     override fun onBindViewHolder(holder: TvShowViewHolder, position: Int) {
-        holder.bind(tvShows[position])
+        val tvShow = tvShows[position]
+        holder.bind(tvShow)
+        holder.itemView.setOnClickListener {
+            onItemClick?.invoke(tvShow)
+        }
     }
 
-    override fun getItemCount() = tvShows.size
+    override fun getItemCount(): Int = tvShows.size
+
     /**
      * ViewHolder for a TV show item.
      */
     class TvShowViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val tvShowName: TextView = itemView.findViewById(R.id.tvShowName)
-        private val tvShowGenre: TextView = itemView.findViewById(R.id.tvShowGenre)
+        // Add additional view references as needed.
 
         /**
-         * Binds TV show data to the views.
+         * Binds a TV show to the view.
          */
-        fun bind(show: TvShowItem) {
-            tvShowName.text = show.name
-            tvShowGenre.text = show.genre ?: "Unknown genre"
+        fun bind(tvShow: TvShowItem) {
+            tvShowName.text = tvShow.name
         }
     }
 }
