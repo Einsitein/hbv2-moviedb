@@ -7,10 +7,10 @@ Backend - https://hugbunadarverkefni1-moviedb.onrender.com/
 - [X] **User Story 7**  
   As a user, I want to see my average rating for all movies I have rated, so that I can understand my overall rating trends.
 
-- [] **User Story 8**  
+- [X] **User Story 8**  
   As a mobile user, I want to change my profile picture by selecting an image from my gallery or taking a new photo, so that I can easily personalize my profile and distinguish myself from other users.
 
-- [] **User Story 9**  
+- [ ] **User Story 9**  
   As a mobile user, I want to rate a movie or TV show using a touch slider, so that I can quickly provide ratings with a simple swipe gesture
 
 - [X] **New User Story 1**  

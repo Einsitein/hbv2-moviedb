@@ -50,7 +50,10 @@ class SearchActivity : AppCompatActivity() {
                         startActivity(intent)
                     }
                     is TvShowItem -> {
-                        // Do nothing for TV shows, no TV show detail activity yet.
+                        // Start TvShowDetailsActivity with the TV show ID.
+                        val intent = Intent(this@SearchActivity, TvShowDetailsActivity::class.java)
+                        intent.putExtra("TVSHOW_ID", selectedItem.id)
+                        startActivity(intent)
                     }
                 }
             }

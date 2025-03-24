@@ -14,6 +14,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
+import `is`.hbv601g.movieapp.database.AppDatabaseHelper
 import `is`.hbv601g.movieapp.model.ReviewItem
 import `is`.hbv601g.movieapp.network.RetrofitInstance
 import kotlinx.coroutines.Dispatchers
@@ -95,7 +96,7 @@ class MovieDetailsActivity : AppCompatActivity() {
 
                 lifecycleScope.launch {
                     try {
-                        val token = DBHelper(applicationContext).getLatestToken()
+                        val token = AppDatabaseHelper(applicationContext).getLatestToken()
                         val response = token?.let { RetrofitInstance.userApiService.getMe(it) }
                         val userId = response?.body()?.id
 

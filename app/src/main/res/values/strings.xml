@@ -10,4 +10,8 @@
     <string name="unknown">Unknown</string>
     <string name="show_my_reviews">My reviews</string>
     <string name="toggle_dark_mode">Toggle Dark Mode</string>
+    <string name="profile_picture">Profile Picture</string>
+    <string name="tv_show_poster">TV Show Poster</string>
+    <string name="seasons">Seasons</string>
+
 </resources>
