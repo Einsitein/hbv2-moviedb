@@ -51,6 +51,13 @@
         android:textColor="?android:textColorPrimary"/>
 
     <Button
+        android:id="@+id/btnFavorites"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Favorites"
+        android:textColor="?android:textColorPrimary"/>
+
+    <Button
         android:id="@+id/btnToggleTheme"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

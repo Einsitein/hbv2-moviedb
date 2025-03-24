@@ -6,6 +6,9 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
@@ -13,6 +16,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import `is`.hbv601g.movieapp.database.AppDatabaseHelper
 import `is`.hbv601g.movieapp.model.ReviewItem
@@ -29,6 +34,8 @@ class MovieDetailsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_movie_detail)
 
         val moviePoster: ImageView = findViewById(R.id.moviePoster)
+        val favoritesButton: Button = findViewById(R.id.addFavoritesButton)
+        val userIdsList = findViewById<RecyclerView>(R.id.recyclerViewUsersFavorited)
         val movieName: TextView = findViewById(R.id.movieName)
         val movieYear: TextView = findViewById(R.id.movieYear)
         val movieRating: TextView = findViewById(R.id.movieRating)
@@ -39,6 +46,8 @@ class MovieDetailsActivity : AppCompatActivity() {
         val movieId = intent.getIntExtra("MOVIE_ID", -1)
 
         if (movieId != -1) {
+
+            // Fetch movie details
             lifecycleScope.launch {
                 try {
                     val movieResponse = RetrofitInstance.movieApiService.getMovieById(movieId)
@@ -68,13 +77,25 @@ class MovieDetailsActivity : AppCompatActivity() {
                                     // Show notification upon download completion
                                     setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
                                     // Save the file to the Downloads directory with a custom name
-                                    setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "movie_image.jpg")
+                                    setDestinationInExternalPublicDir(
+                                        Environment.DIRECTORY_DOWNLOADS,
+                                        "movie_image.jpg"
+                                    )
                                 }
-                                val downloadManager = getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+                                val downloadManager =
+                                    getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
                                 downloadManager.enqueue(request)
-                                Toast.makeText(this@MovieDetailsActivity, "Downloading image...", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(
+                                    this@MovieDetailsActivity,
+                                    "Downloading image...",
+                                    Toast.LENGTH_SHORT
+                                ).show()
                             } else {
-                                Toast.makeText(this@MovieDetailsActivity, "No image URL available!", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(
+                                    this@MovieDetailsActivity,
+                                    "No image URL available!",
+                                    Toast.LENGTH_SHORT
+                                ).show()
                             }
                         }
                     }
@@ -83,6 +104,31 @@ class MovieDetailsActivity : AppCompatActivity() {
                     throw e
                 } catch (e: Exception) {
                     Log.e("MovieApp", "❌ Error fetching movie details: ${e.message}")
+                }
+            }
+
+            // Populate the favorites list (user IDs)
+            lifecycleScope.launch(Dispatchers.IO) {
+                val dbHelper = AppDatabaseHelper(applicationContext)
+                // Assuming getMovieFavorites returns List<String> for a given movie id (as String)
+                val userFavorites = dbHelper.getMovieFavorites(movieId.toString())
+                Log.d("users: ", userFavorites.joinToString(separator = " "))
+                withContext(Dispatchers.Main) {
+                    userIdsList.layoutManager = LinearLayoutManager(this@MovieDetailsActivity)
+                    userIdsList.adapter = UserIdsAdapter(userFavorites)
+                }
+            }
+
+            favoritesButton.setOnClickListener {
+                val dbHelper = AppDatabaseHelper(applicationContext)
+                val email = dbHelper.getLatestEmail()
+                if (email != null) {
+                    dbHelper.insertFavoriteMovie(email, movieId.toString())
+                    Toast.makeText(
+                        this@MovieDetailsActivity,
+                        "Movie Added To Favorites",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
 
@@ -127,7 +173,8 @@ class MovieDetailsActivity : AppCompatActivity() {
                                     withContext(Dispatchers.Main) {
                                         if (updatedRatingResponse.isSuccessful) {
                                             val newAverageRating = updatedRatingResponse.body()
-                                            movieRating.text = "Rating: " + String.format("%.2f", newAverageRating)
+                                            movieRating.text =
+                                                "Rating: " + String.format("%.2f", newAverageRating)
                                         } else {
                                             Toast.makeText(
                                                 this@MovieDetailsActivity,
@@ -158,4 +205,29 @@ class MovieDetailsActivity : AppCompatActivity() {
             }
         }
     }
+
+    // RecyclerView adapter for displaying user IDs who favorited the movie.
+    class UserIdsAdapter(userIds: List<String>) :
+        RecyclerView.Adapter<UserIdsAdapter.UserIdViewHolder>() {
+
+        // Store only unique user IDs while preserving order.
+        private val uniqueUserIds: List<String> = userIds.distinct()
+
+        class UserIdViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+            val textView: TextView = itemView.findViewById(R.id.userIdTextView)
+        }
+
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserIdViewHolder {
+            val view = LayoutInflater.from(parent.context)
+                .inflate(R.layout.item_user_id, parent, false)
+            return UserIdViewHolder(view)
+        }
+
+        override fun onBindViewHolder(holder: UserIdViewHolder, position: Int) {
+            holder.textView.text = uniqueUserIds[position]
+        }
+
+        override fun getItemCount(): Int = uniqueUserIds.size
+    }
+
 }

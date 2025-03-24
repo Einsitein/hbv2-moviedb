@@ -89,7 +89,7 @@ class LoginActivity : AppCompatActivity() {
                     } else {
                         // Save token using AppDatabaseHelper.
                         val dbHelper = AppDatabaseHelper(context)
-                        dbHelper.insertToken(responseString)
+                        dbHelper.insertToken(responseString, email)
                         val tokenFromDb = dbHelper.getLatestToken()
                         runOnUiThread {
                             Toast.makeText(context, "Token: $tokenFromDb", Toast.LENGTH_LONG).show()
