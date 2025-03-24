@@ -18,3 +18,9 @@ Backend - https://hugbunadarverkefni1-moviedb.onrender.com/
 
 - [X] **New User story 2**  
   As a user, I want to be able to change the background color between white and black for better experience at night
+
+- [X] **New User story 3**  
+  As a user, I want to be able to add movies to favorites to find later
+
+- [X] **New User story 4**  
+  As a user, I want to be able to see what other users have added a certain movie to their favorites
