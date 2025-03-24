@@ -18,16 +18,14 @@ import androidx.lifecycle.lifecycleScope
 import `is`.hbv601g.movieapp.database.AppDatabaseHelper
 import `is`.hbv601g.movieapp.network.RetrofitInstance
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 
-
 class HomeActivity : AppCompatActivity() {
 
     private lateinit var profileImageView: ImageView
-    private lateinit var pickImageLauncher: ActivityResultLauncher<String>
+    private lateinit var pickImageLauncher: ActivityResultLauncher<Array<String>>
     private lateinit var takePhotoLauncher: ActivityResultLauncher<Uri>
     private var photoUri: Uri? = null
 
@@ -45,16 +43,25 @@ class HomeActivity : AppCompatActivity() {
         profileImageView = findViewById(R.id.profileImageView)
         loadProfilePicture()
 
-        // Launcher for gallery selection.
-        pickImageLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+        // Launcher for gallery selection using OpenDocument.
+        pickImageLauncher = registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri: Uri? ->
             uri?.let {
-                updateProfilePicture(it)
+                // Use a coroutine to copy the file (this is IO-bound work).
+                lifecycleScope.launch {
+                    val localUri = copyUriToFile(it)
+                    if (localUri != null) {
+                        updateProfilePicture(localUri)
+                    } else {
+                        Toast.makeText(this@HomeActivity, "Failed to copy image", Toast.LENGTH_SHORT).show()
+                    }
+                }
             }
         }
 
         // Launcher for taking a new photo.
         takePhotoLauncher = registerForActivityResult(ActivityResultContracts.TakePicture()) { success: Boolean ->
             if (success && photoUri != null) {
+                // photoUri is already a local file URI.
                 updateProfilePicture(photoUri!!)
             } else {
                 Toast.makeText(this, "Failed to take photo", Toast.LENGTH_SHORT).show()
@@ -76,7 +83,7 @@ class HomeActivity : AppCompatActivity() {
             .setTitle("Select Profile Picture")
             .setItems(options) { _, which ->
                 when (which) {
-                    0 -> pickImageLauncher.launch("image/*")
+                    0 -> pickImageLauncher.launch(arrayOf("image/*"))
                     1 -> {
                         photoUri = createImageUri()
                         takePhotoLauncher.launch(photoUri)
@@ -95,7 +102,35 @@ class HomeActivity : AppCompatActivity() {
     }
 
     /**
-     * Updates the profile picture ImageView and stores the URI in the database.
+     * Copies the file from the given [uri] to the app's storage and returns a local URI.
+     */
+    private suspend fun copyUriToFile(uri: Uri): Uri? = withContext(Dispatchers.IO) {
+        try {
+            // Create a directory for profile images.
+            val profileDir = File(getExternalFilesDir(null), "profile_images")
+            if (!profileDir.exists()) {
+                profileDir.mkdirs()
+            }
+            val fileName = "profile_${System.currentTimeMillis()}.jpg"
+            val file = File(profileDir, fileName)
+
+            // Open an input stream from the source URI and copy its contents.
+            contentResolver.openInputStream(uri)?.use { inputStream ->
+                file.outputStream().use { outputStream ->
+                    inputStream.copyTo(outputStream)
+                }
+            }
+
+            // Return a content URI for the newly copied file.
+            FileProvider.getUriForFile(this@HomeActivity, "${applicationContext.packageName}.provider", file)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
+    }
+
+    /**
+     * Updates the profile picture ImageView and stores the local URI in the database.
      */
     private fun updateProfilePicture(uri: Uri) {
         profileImageView.setImageURI(uri)
@@ -111,16 +146,20 @@ class HomeActivity : AppCompatActivity() {
         val dbHelper = AppDatabaseHelper(this)
         val uriString = dbHelper.getProfilePicture()
         uriString?.let {
-            profileImageView.setImageURI(Uri.parse(it))
+            try {
+                profileImageView.setImageURI(Uri.parse(it))
+            } catch (e: Exception) {
+                Toast.makeText(this, "Error loading image", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
     private fun setupNavigationButtons() {
-        // Temporary buttons - move to nav bar or something later.
         val searchButton = findViewById<Button>(R.id.btnSearch)
         val moviesButton = findViewById<Button>(R.id.btnMovies)
         val tvShowsButton = findViewById<Button>(R.id.btnTvShows)
         val reviewButton = findViewById<Button>(R.id.btnReview)
+        val favoritesButton = findViewById<Button>(R.id.btnFavorites)
 
         searchButton.setOnClickListener {
             startActivity(Intent(this, SearchActivity::class.java))
@@ -134,12 +173,14 @@ class HomeActivity : AppCompatActivity() {
         reviewButton.setOnClickListener {
             startActivity(Intent(this, MyRatingsActivity::class.java))
         }
+        favoritesButton.setOnClickListener {
+            startActivity(Intent(this, FavoritesActivity::class.java))
+        }
     }
 
     private fun setupThemeToggleButton() {
         val toggleThemeButton = findViewById<Button>(R.id.btnToggleTheme)
         toggleThemeButton.setOnClickListener {
-            // Check current mode and toggle
             val currentMode = AppCompatDelegate.getDefaultNightMode()
             val newMode = if (currentMode == AppCompatDelegate.MODE_NIGHT_YES) {
                 AppCompatDelegate.MODE_NIGHT_NO
@@ -150,22 +191,19 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
-    private suspend fun setupAverageRating(){
+    private suspend fun setupAverageRating() {
         val averageRatingTextView = findViewById<TextView>(R.id.textViewAverageRating)
         val rating = getAverageRating(applicationContext)
         val averageRatingText = "My Average Rating Across All Movies: $rating"
         averageRatingTextView.text = averageRatingText
     }
 
-    /*
-    * Helper function
-    * */
-    private suspend fun getAverageRating(context: Context): Double{
+    private suspend fun getAverageRating(context: Context): Double {
         val token = AppDatabaseHelper(context).getLatestToken()
         var rating = 0.0
         token?.let {
             val fetchedRating = RetrofitInstance.userApiService.getAverageRatingOfMe(token).body()
-            fetchedRating?.let{ rating = fetchedRating }
+            fetchedRating?.let { rating = fetchedRating }
         }
         return rating
     }
