@@ -19,6 +19,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.google.android.material.slider.Slider
 import `is`.hbv601g.movieapp.database.AppDatabaseHelper
 import `is`.hbv601g.movieapp.model.ReviewItem
 import `is`.hbv601g.movieapp.network.RetrofitInstance
@@ -41,6 +42,7 @@ class MovieDetailsActivity : AppCompatActivity() {
         val movieRating: TextView = findViewById(R.id.movieRating)
         val userRatingInput: EditText = findViewById(R.id.userRatingInput)
         val submitRatingButton: Button = findViewById(R.id.submitRatingButton)
+        val ratingSlider = findViewById<Slider>(R.id.ratingSlider)
 
         // Retrieve the passed movie ID
         val movieId = intent.getIntExtra("MOVIE_ID", -1)
@@ -116,6 +118,12 @@ class MovieDetailsActivity : AppCompatActivity() {
                 withContext(Dispatchers.Main) {
                     userIdsList.layoutManager = LinearLayoutManager(this@MovieDetailsActivity)
                     userIdsList.adapter = UserIdsAdapter(userFavorites)
+                }
+            }
+
+            ratingSlider.addOnChangeListener { _, value, fromUser ->
+                if (fromUser) {
+                    userRatingInput.setText(value.toString())
                 }
             }
 
