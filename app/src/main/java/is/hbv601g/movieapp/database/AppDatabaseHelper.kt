@@ -125,6 +125,7 @@ class AppDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_N
      */
     fun insertToken(token: String, email: String): Long {
         val db = writableDatabase
+
         val values = ContentValues().apply {
             put(COLUMN_TOKEN, token)
             put(COLUMN_EMAIL, email)
