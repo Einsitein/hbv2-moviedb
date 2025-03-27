@@ -18,7 +18,7 @@
 
             <TextView
                 android:id="@+id/mediaTitle"
-                android:layout_width="342dp"
+                android:layout_width="322dp"
                 android:layout_height="wrap_content"
                 android:text="media_title" />
 
@@ -27,7 +27,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Rating"
-                android:textAlignment="textEnd" />
+                android:textAlignment="center" />
         </TableRow>
 
         <TableRow
